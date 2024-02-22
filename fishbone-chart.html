@@ -1,0 +1,60 @@
+<template>
+    <require from="./fishbone-chart.css"></require>
+    <require from="./grid/grid"></require>
+
+    <grid cols.bind="cols">
+        <div if.bind="causes" class="fishboneChart">
+            <div class="wrapper">
+                <div class="allCauses">
+                    <div class="causesGrouped" ref="topCausesGrouped">
+                        <!-- Top Causes -->
+                        <div class="causesGroup pl-10" repeat.for="causeObj of getTopCauses(causes)">
+                            <div class="causeContent">
+                                <div class="cause top" class.bind="getColor(index) + '_' + getColor(index) + 'Border'">${causeObj.category}</div>
+                                <div class="causeAndLine">
+                                    <div class="causesBeforeLine">
+                                        <div repeat.for="rootCause of getRootCauses(causeObj.causes)">${rootCause}</div>
+                                    </div>
+                                    <div class="diagonalLine" class.bind="getColor(index) + 'TopBottom'"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Line Effect -->
+                    <div class="lineEffect" class.bind="getColor(index) + 'Border'" style.bind="{ '--arrow-color': getColorRgb(index) }"></div>
+
+                    <!-- Bottom Causes -->
+                    <div class="causesGrouped">
+                        <div class="causesGroup" repeat.for="causeObj of getBottomCauses(causes)">
+                            <div class="causeContent">
+                                <div class="causeAndLine">
+                                    <div class="causesBeforeLine">
+                                        <div repeat.for="rootCause of getRootCauses(causeObj.causes)">${rootCause}</div>
+                                    </div>
+                                    <div class="diagonalLine" class.bind="getColor(index) + 'BottomTop'"></div>
+                                </div>
+                                <div class="cause bottom" class.bind="getColor(index) + '_' + getColor(index) + 'Border'">${causeObj.category}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Effect -->
+                <div class="effect left" class.bind="getColor(index) + 'Border'" ref="effectValue">
+                    <div class="effectValue">${effect}</div>
+                </div>
+            </div>
+
+            <!-- Legend -->
+            <div class="legend">
+                <template repeat.for="legendItem of getLegend()">
+                    <div class="legendLabel" click.trigger="selectDataset(legendItem.index)">
+                        <div class="labelSquare legend all" class.bind="legendItem.color + '_dark ' + legendItem.color + 'Border'"></div>
+                        <div class.bind="legendItem.labelClass">${legendItem.label}</div>
+                    </div>
+                </template>
+            </div>
+        </div>
+    </grid>
+</template>
